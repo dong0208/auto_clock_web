@@ -1,4 +1,4 @@
-import http from "../utils/newHttp";
+import http from "../utils/http";
 
 // 获取用户登录信息
 function loginCheckApi () {

@@ -1,4 +1,4 @@
-import http from "../utils/newHttp";
+import http from "../utils/http";
 import store from '../index'
 import {getOperationLog} from '../utils/api'
 // 查询下级人员列表

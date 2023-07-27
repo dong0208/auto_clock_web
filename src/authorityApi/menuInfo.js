@@ -1,4 +1,4 @@
-import http from "../utils/newHttp";
+import http from "../utils/http";
 
 // 转成 menuList 数据
 function handleMenuData (authorityList) {

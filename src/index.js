@@ -14,11 +14,9 @@ import LocalLogin from "./pages/login/index"
 
 let store = createStore(reduxStore, applyMiddleware(thunk));
 
-
 ReactDOM.render(
   <ConfigProvider locale={zh_CN}>
     <Provider store={store}>
-      
       <Router>
       <Switch>
         <Route exact path="/login" component={LocalLogin} ></Route>

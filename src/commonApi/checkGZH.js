@@ -1,7 +1,7 @@
 /**
  * 小程序、公众号校验统一封装
  */
-import http from '../utils/newHttp'
+import http from '../utils/http'
 import {message} from "antd"
 /**
  * 获取appInfo信息

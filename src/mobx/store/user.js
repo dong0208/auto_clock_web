@@ -1,5 +1,5 @@
 import { observable, action, runInAction } from 'mobx'
-import http from "../../utils/newHttp";
+import http from "../../utils/http";
 import { message } from "antd";
 import { goLogin } from "../../config";
 

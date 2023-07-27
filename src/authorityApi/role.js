@@ -1,4 +1,4 @@
-import http from "../utils/newHttp";
+import http from "../utils/http";
 import store from '../index'
 import {getOperationLog} from '../utils/api'
 // 查询角色列表 通用

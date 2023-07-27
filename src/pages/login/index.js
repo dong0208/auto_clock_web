@@ -1,7 +1,7 @@
 import React from 'react';
 import "./index.scss"
 import { Form, Input, Button, message, Icon, Checkbox } from 'antd';
-import http from "../../utils/newHttp";
+import http from "../../utils/http";
 import history from '../../utils/history';
 import {sessionStorage,localStorage} from '../../utils/storage'
 import ForgetPassword from "../forgetPassword";

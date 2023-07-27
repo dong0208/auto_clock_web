@@ -2,7 +2,7 @@ import { message } from "antd";
 import axios from "axios";
 import queryString from "query-string";
 import store from '../index'
-import http from "./newHttp";
+import http from "./http";
 /**
  * 获取当前时间
  */
