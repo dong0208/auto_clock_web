@@ -1,0 +1,151 @@
+.login-server-page-two {
+    width: 100vw;
+    height: 100vh;
+    background-color: #F5F8FF;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    .icon-logo-header {
+      height: 34px;
+    }
+    .logo-box {
+      position: relative;
+    }
+    .container {
+      width: 480px;
+      height: 560px;
+      background: #fff;
+      opacity: 1;
+      border-radius: 20px;
+      box-shadow: 0 0 16px 0 rgba(0,10,51,0.10); ;
+      padding: 40px 40px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .main {
+        width: 420px;
+        height: 500px;
+        position: relative;
+        .ant-form-item {
+          margin: 0;
+          padding: 0;
+          margin-bottom: 20px;
+        }
+        .ant-form-item-children{
+          .ant-input input{
+            line-height: 48px;
+          }
+        }
+        .point {
+          cursor: pointer;
+        }
+        .border-line {
+          display: inline-block;
+          font-size: 16px;
+          padding-bottom: 8px;
+          color: #2663FF;
+          border-bottom: 2px solid #1890ff;
+        }
+        .title {
+          margin-bottom: 10px;
+          font-size: 16px;
+        }
+        .back-btn {
+          color: #2663FF;
+          text-align: center;
+          margin-top: 16px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+  
+        .title-name {
+          height: 32px;
+          font-size: 30px;
+          font-family: PingFangSC-Medium,PingFang SC;
+          font-weight: 500;
+          color: #333;
+          line-height: 32px;
+          text-align: center;
+          margin-bottom: 20px;
+        }
+      }
+    }
+    .login-right{
+      width: 376px;
+      height: 470px;
+      cursor: pointer;
+    }
+    .welcome{
+      font-size: 24px;
+      font-family: "PingFang SC";
+      font-weight: 500;
+      color: #303133;
+      margin-bottom: 64px;
+      margin-top: 10px;
+    }
+  }
+  
+  @media (max-width: 1060px) {
+    .login-server-page {
+      .container {
+        .login-icon {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  .sub-btn{
+    margin-top: 81px;
+    background-color: #2663FF;
+    height: 48px;
+    width: 420px;
+    font-size: 18px;
+  }
+  
+  .login {
+    .find-psd {
+      margin-bottom: 10px;
+      float: right;
+      cursor: pointer;
+      color: #2663FF;
+      font-size: 14px;
+    }
+    .find-psd:hover {
+      text-decoration: underline;
+      color: #2663FF;
+    }
+    .submit-btn{
+      background-color: #2663FF;
+      height: 48px;
+      width: 420px;
+      font-size: 18px;
+      border-radius: 8px;
+    }
+    .ant-form-item {
+      margin: 0;
+      padding: 0;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    .ant-form-item-children{
+      .ant-input input{
+        line-height: 48px;
+      }
+    }
+    .ant-col{
+      width: 100%;
+    }
+  }
+  
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #2663FF;
+    border-color: #2663FF;
+  }
+  
+  .login_bottom{
+    position: absolute;
+    bottom: 20px;
+  }
+  
