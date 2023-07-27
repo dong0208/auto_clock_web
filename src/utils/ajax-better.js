@@ -1,29 +1,28 @@
 import axios from 'axios';
 import * as qs from 'qs';
-// import md5 from "js-md5";
-// import { Base64 } from './base64'
-// import {getDevBaseUrl} from "./http"
-// import { httpConfig } from "../config/index";
+import md5 from "js-md5";
+import { Base64 } from './base64'
+import {getDevBaseUrl} from "./http"
+import { httpConfig } from "../config/index";
 import {sessionStorage,localStorage} from './storage'
 
-const wrapInterceptors = (http, { requestInterceptors, responseInterceptors, requestData, other }) => {
+const wrapInterceptors = (http, { isApijson, requestInterceptors, responseInterceptors, requestData, other }) => {
   // 请求拦截
   http.interceptors.request.use(req => {
     // get请求
-    if (req.method === "get"  && !requestData.params) {
+    if (req.method === "get" && !isApijson && !requestData.params) {
       req.params = { ...req.data }
     }
-    // if(isApijson){
-    //   req.headers['Content-Type'] = 'application/json'
-    // }
-    
+    if(isApijson){
+      req.headers['Content-Type'] = 'application/json'
+    }
     // 兼容本地获取不到cookie
     const { host } = window.location;
     if(host.includes("localhost")){
       req.headers['sessionId'] = sessionStorage.get("localSession")
     }
 
-    if (requestInterceptors) requestInterceptors({ ...req });
+    if (requestInterceptors) requestInterceptors({ ...req, isApijson });
     return req;
   });
   // 响应拦截
@@ -35,12 +34,12 @@ const wrapInterceptors = (http, { requestInterceptors, responseInterceptors, req
   });
   return http;
 }
-function axiosInstance ({ baseURL, other, requestInterceptors, responseInterceptors, requestData }) {
+function axiosInstance ({ isApijson, baseURL, other, requestInterceptors, responseInterceptors, requestData }) {
   return wrapInterceptors(axios.create({
     baseURL,
-    timeout: 60000,
+    timeout: 30000,
     withCredentials: true,
-  }), { requestInterceptors, responseInterceptors, other, requestData });
+  }), { isApijson, requestInterceptors, responseInterceptors, other, requestData });
 }
 
 
@@ -51,6 +50,11 @@ function ajaxBetter ({
   isFileUpload = false,
   data,
   params,
+  isApijson = false,
+
+  queryportAppSecert,
+  queryportAppkey,
+  queryportAppType,
   baseURL,
 
   ...other
@@ -73,30 +77,33 @@ function ajaxBetter ({
       }
       requestData.data = formData
     }
-    // if (isApijson) {
-    //   // 加密
-    //   let sercerData = JSON.stringify(requestData.data)
-    //   if (getDevBaseUrl() == httpConfig.api_publish || httpConfig.encrypt) {
-    //     sercerData = requestData.data = Base64.encode(JSON.stringify(requestData.data))
-    //   }
-    //   const sign = md5(`${queryportAppSecert}:${sercerData}:${queryportAppSecert}`);
+    if (isApijson) {
+      // 加密
+      let sercerData = JSON.stringify(requestData.data)
+      if (getDevBaseUrl() == httpConfig.api_publish || httpConfig.encrypt) {
+        sercerData = requestData.data = Base64.encode(JSON.stringify(requestData.data))
+      }
+      const sign = md5(`${queryportAppSecert}:${sercerData}:${queryportAppSecert}`);
       
-    //   requestData.url = `${url}?appkey=${queryportAppkey}&sign=${sign}${queryportAppType ? `&appType=${queryportAppType}`: ""}${ getDevBaseUrl() == httpConfig.api_publish || httpConfig.encrypt ? '&encryptType=default':''}`;
-    //   if(url.includes("excel/submitExportTask")){
-    //     requestData.url = `${url}&appkey=${queryportAppkey}&sign=${sign}${queryportAppType ? `&appType=${queryportAppType}`: ""}${ getDevBaseUrl() == httpConfig.api_publish || httpConfig.encrypt ? '&encryptType=default':''}`;
-    //   }
-    //   requestData.method = method || "post";
-    // }
-    axiosInstance({ requestInterceptors, responseInterceptors, baseURL, requestData, other })(requestData).then(resolve).catch(reject)
+      requestData.url = `${url}?appkey=${queryportAppkey}&sign=${sign}${queryportAppType ? `&appType=${queryportAppType}`: ""}${ getDevBaseUrl() == httpConfig.api_publish || httpConfig.encrypt ? '&encryptType=default':''}`;
+      requestData.method = method || "post";
+    }
+    axiosInstance({ isApijson, requestInterceptors, responseInterceptors, baseURL, requestData, other })(requestData).then(resolve).catch(reject)
   });
 }
 
 ajaxBetter.create = function ({
+  queryportAppSecert,
+  queryportAppkey,
+  queryportAppType,
   baseURL
 }, requestInterceptors) {
   return function () {
     return ajaxBetter({
       ...arguments[0],
+      queryportAppSecert,
+      queryportAppkey,
+      queryportAppType,
       baseURL
     }, requestInterceptors)
   }

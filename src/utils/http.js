@@ -1,76 +1,84 @@
-// import ajax from "ajax-better";
-import ajax from "./ajax-better"
-import { httpConfig, goLogin  } from "../config";
+import axios from 'axios';
+import * as qs from 'qs';
 import { message } from "antd";
+const wrapInterceptors = (http) => {
+  // 请求拦截
+  http.interceptors.request.use((req) => {
+    // formData提交
+    if ((req.formData || req.isFormData) && req.method === "post") {
+      req.data = qs.stringify({ ...req.data })
+    }
+    // post QueryStringParameters   Content-Type: application/json;charset=UTF-8
+    if ((!(req.formData || req.isFormData)) && req.method === "post" ){
+      req.url = jsonToUrlparams(req.url, req.data)
+      req.data = ""
+      req.headers["Content-Type"] = "application/json;charset=UTF-8"
+    }
 
-export function getDevBaseUrl () {
-  let HTTP_ENV = process.env.HTTP_ENV;
-  if (HTTP_ENV === "daily") {
-    return httpConfig.api_daily
-  } else if (HTTP_ENV === "publish") {
-    return httpConfig.api_publish
-  } else if (HTTP_ENV === "gray") {
-    return httpConfig.api_gray
-  }
-}
-function createAjax ({
-  publish,
-}) {
-  return ajax.create({
-    baseURL: publish ? httpConfig.api_publish : getDevBaseUrl(),
-  });
-}
-
-function http ({
-  url,
-  method,
-  isFormData = false,
-  isFileUpload = false,
-  data,
-  params,
-  hideErrorMessage = false,
-  publish = false, // 是否调用线上 apijson
-  ShowErrMsg = true,//是否提示错误信息，默认是true
-}) {
-  return new Promise((resolve, reject) => {
-    createAjax({
-      publish,
-    })({
-      url,
-      method,
-      isFormData,
-      isFileUpload,
-      data,
-      params,
-    }).then(res => {
-      let { data } = res;
-      //解密
-    //   if ((getDevBaseUrl() == httpConfig.api_publish || httpConfig.encrypt) && isApijson && (!url.includes("/excel/submitExportTask"))) {
-    //     data = JSON.parse(Base64.decode(data))
-    //   }
-        let errMsg
-        const { status, message: infoMsg, entry } = data
-        if (status) {
-          resolve(entry);
-          return;
-        }
-        errMsg = infoMsg;
-      if (data.code === 550) {
-        // 未登录，走登录页面
-        message.error(errMsg);
-        setTimeout(()=>{
-          goLogin();
-        },4000);
-        return ;
+    // 文件上传
+    if (req.isfile && req.method === "post") {
+      req.headers = { "Content-Type": "multipart/form-data" }
+      let formData = new FormData()
+      for (let props in req.data) {
+        formData.append(props, req.data[props])
       }
-      if (errMsg) {
-        reject(errMsg)
-        if(ShowErrMsg){
-          if (!hideErrorMessage) message.error(errMsg);
-        }
-      }
-    }).catch(reject)
+      req.data = formData
+    }
+    // 兼容本地获取不到cookie
+    const { host } = window.location;
+    if(host.includes("localhost")){
+      req.headers['sessionId'] = window.cookieStore.get("xxl_sso_sessionid")
+    }
+    return req
   })
+
+  // 响应拦截
+  http.interceptors.response.use(res => {
+    // 正常响应 200
+    const { config, data } = res
+    if (data.code === 200 || data.status) {
+      return Promise.resolve(data)
+    }else{
+      message.error(data.message)
+      return Promise.reject(data)
+    }
+  }, (error) => {
+  
+    // 请求超时处理
+    if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
+      error.message = '请求超时，请稍后再试'
+      message.error(error.message)
+      return Promise.reject(error)
+    }
+    //?error.response.data.message:
+    return Promise.resolve({status:false,message:"系统错误，请稍后再试("+error.response||''+")"})
+  })
+
+  return http
 }
 
-export default http
+export default wrapInterceptors(axios.create({
+  timeout: 30000,
+  withCredentials: true,
+}))
+
+
+
+const jsonToUrlparams = (url, json) => {
+  if (!json) {
+    return url
+  }
+  let result = ''
+  if (/\?/.test(url)) {
+    result = '&'
+  } else {
+    result = '?'
+  }
+
+  for (let attr in json) {
+    result += `${attr}=${
+      json[attr] || json[attr] === false || json[attr] === 0 ? encodeURIComponent(json[attr]) : ''
+    }&`
+  }
+  return url + result.substring(0, result.length - 1)
+}

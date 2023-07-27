@@ -23,7 +23,6 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -47,6 +46,7 @@ module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
   shouldUseSourceMap = webpackEnv !== 'production';
+  console.log(webpackEnv,shouldUseSourceMap,'webpackEnv_________')
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
   // In development, we always serve from the root. This makes config easier.
@@ -116,7 +116,6 @@ module.exports = function (webpackEnv) {
     }
     return loaders;
   };
-
   const Timestamp = new Date().getTime();
 
   return {
@@ -221,17 +220,6 @@ module.exports = function (webpackEnv) {
           cache: true,
           sourceMap: shouldUseSourceMap,
         }),
-        // new UglifyJsPlugin(
-        //   {
-        //     uglifyOptions: {
-        //       warnings: false,
-        //       compress: {
-        //         drop_debugger: true,
-        //         // drop_console: true, // 打印log
-        //       }
-        //     }
-        //   }
-        // ),
         // This is only used in production mode
         new OptimizeCSSAssetsPlugin({
           cssProcessorOptions: {
@@ -275,15 +263,14 @@ module.exports = function (webpackEnv) {
       // https://github.com/facebook/create-react-app/issues/290
       // `web` extension prefixes have been added for better support
       // for React Native Web.
-      extensions: [".js", ".jsx", ".json", ".tsx",],
-      // paths.moduleFileExtensions
-      //   .map(ext => `.${ext}`)
-      //   .filter(ext => useTypeScript || !ext.includes('ts')),
+      extensions: paths.moduleFileExtensions
+        .map(ext => `.${ext}`)
+        .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
-        '@': path.join(__dirname, "../src")
+        '@': path.join(__dirname, "/src")
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -313,7 +300,7 @@ module.exports = function (webpackEnv) {
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
         {
-          test: /\.(js|mjs|jsx|tsx)$/,
+          test: /\.(js|mjs|jsx)$/,
           enforce: 'pre',
           use: [
             {
@@ -377,7 +364,7 @@ module.exports = function (webpackEnv) {
             // Process any JS outside of the app with Babel.
             // Unlike the application JS, we only compile the standard ES features.
             {
-              test: /\.(js|mjs|tsx)$/,
+              test: /\.(js|mjs)$/,
               exclude: /@babel(?:\/|\\{1,2})runtime/,
               loader: require.resolve('babel-loader'),
               options: {
@@ -487,7 +474,6 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
-      // new BundleAnalyzerPlugin(),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
@@ -535,7 +521,6 @@ module.exports = function (webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
-      
       // This is necessary to emit hot updates (currently CSS only):
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Watcher doesn't work well if you mistype casing in a path so we use

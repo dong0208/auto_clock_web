@@ -6,9 +6,9 @@ echo "start publish from $br ..."
 git add . && git commit -a -m "code publish update" && git push 
 echo "update code from $br ..."
 echo "switch to $branch and merge from $br ..."
-git checkout $branch && git pull && git merge $br
+git checkout $branch && git merge $br
 echo "build $branch..."
-cnpm i && cnpm run build-$branch 
+cnpm run build-$branch 
 echo "update $branch code..."
 git push && git pull && git push && git add . && git commit -a -m "$branch" && git push 
 echo "hk-p cdn build..."

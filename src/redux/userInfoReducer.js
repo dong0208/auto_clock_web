@@ -7,7 +7,11 @@ const initialState = {
   admin_type: null, // 管理员类型 number
   is_all_data: null, // bool
   top_user_id: null,
-  leader_user_id: null
+  leader_user_id: null,
+  login_app:null,
+  status:null,
+  reject_str:null,
+  business_data:null
 }
 
 function userInfoReducer (state = initialState, action) {

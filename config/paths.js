@@ -50,7 +50,6 @@ const moduleFileExtensions = [
   'json',
   'web.jsx',
   'jsx',
-  'tsx'
 ];
 
 // Resolve file paths in the same order as webpack
@@ -65,6 +64,12 @@ const resolveModule = (resolveFn, filePath) => {
 
   return resolveFn(`${filePath}.js`);
 };
+
+const domain = {
+  "daily": "cdn.hknet-inc.com",
+  "gray": "pages.qejs.tencent-cloud.com",
+  "publish": "pages.qejs.tencent-cloud.com"
+}
 
 // config after eject: we're in ./config/
 module.exports = {
@@ -82,7 +87,7 @@ module.exports = {
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
-  servedPath:`https://cdn.hknet-inc.com/hknet/operate-backstage/${process.env.HTTP_ENV}/build`+ getServedPath(resolveApp('package.json')),
+  servedPath:`https://${domain[process.env.HTTP_ENV]}/live/live-operation/${process.env.HTTP_ENV}/build`+ getServedPath(resolveApp('package.json')),
 };
 
 

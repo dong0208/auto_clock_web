@@ -1,32 +1,25 @@
 import { createHashHistory } from "history"; 
 const history = createHashHistory();
-/**
- * 本地请求正式库: 需将httpConfig 和 loginConfig 对应的日常地址修改为gray的请求地址
- * 本地停用加密模式: httpConfig.encrypt 设为false
- */
 
 const httpConfig = {
-  api_daily: "http://daily.hknet-inc.com",
-  api_gray: "https://gray.hknet-inc.com",
-  api_publish: "https://web.hknet-inc.com",
+  api_daily: "https://daily.hknet-inc.com",
+  api_publish: "https://web.qejs.tencent-cloud.com",
   encrypt: false
 }
 
 const queryportConfig = {
-  queryportAppSecert: "5f799f787c15c374ed1addcd91894215",
-  queryportAppkey: "12610511",
-  queryportAppType: "operator",
+  s: "5f799f787c15c374ed1addcd91894215",//queryportAppSecert
+  k: "12610511",//queryportAppkey
+  t: "shoper"//queryportAppType
 }
 
 const loginConfig = {
-  daily: "http://dailym.hknet-inc.com/hknet/login/index.html?appType=operator&service=login",
-  gray: "https://graym.hknet-inc.com/hknet/login/index.html?appType=operator&service=login",
-  publish: "https://m.hknet-inc.com/hknet/login/index.html?appType=operator&service=login",
+  daily: "https://dailym.hknet-inc.com/hknet/login/index.html?appType=topbusiness&service=login",
+  publish: "https://pages.qejs.tencent-cloud.com/hknet/jishi-login/index.html?appType=topbusiness&service=login",
 }
 const userCenterConfig = {
-  daily: "http://dailym.hknet-inc.com/hknet/login/index.html?appType=operator&service=userCenter",
-  gray: "https://graym.hknet-inc.com/hknet/login/index.html?appType=operator&service=userCenter",
-  publish: "https://m.hknet-inc.com/hknet/login/index.html?appType=operator&service=userCenter"
+  daily: "https://dailym.hknet-inc.com/hknet/login/index.html?appType=topbusiness&service=userCenter",
+  publish: "https://pages.qejs.tencent-cloud.com/hknet/jishi-login/index.html?appType=topbusiness&service=userCenter"
 }
 
 function goLogin () {
@@ -35,7 +28,8 @@ function goLogin () {
   if(host.includes("localhost")){//本地登录兼容
     history.push("/login")
   }else{
-    window.location.replace(loginConfig[`${process.env.HTTP_ENV}`] + `&redirectUrl=${redirectUrl}`);
+    // window.location.replace(loginConfig[`${process.env.HTTP_ENV}`] + `&redirectUrl=${redirectUrl}`);
+    history.push("/login")
   }
 }
 
@@ -44,24 +38,27 @@ function goUserCenter () {
   window.location.href = userCenterConfig[`${process.env.HTTP_ENV}`] + `&redirectUrl=${redirectUrl}`;
 }
 
-// 门店平台地址
-const sellerUrlConfig = {
-  daily: "http://daily.seller.hknet-inc.com",
-  gray: "http://gray.seller.hknet-inc.com",
-  publish: "http://seller.hknet-inc.com"
-}
-
 const { NODE_ENV, HTTP_ENV: httpEnv } = process.env;
 const isEnvDevelopment = NODE_ENV === 'development';
 
-const itemCookCompany=[7,10605]
+const operatorUrlConfig = {
+  daily: "https://dailym.hknet-inc.com/hknet/jishi-operation/index.html",
+  publish: "https://pages.qejs.tencent-cloud.com/hknet/jishi-operation/index.html"
+}
+
+// apijson请求返回结构处理同普通请求
+const apijsonUrlEqualCommon = ["/queryport/excel/submitExportTask", "/queryport/excel/download"]
+
+// apijson直接返回不判断结果
+const apijsonUrlImmediateBack = ["/queryport/betch", "/queryport/detect"]
 export {
   httpConfig,
   queryportConfig,
   goLogin,
   goUserCenter,
-  sellerUrlConfig,
   isEnvDevelopment,
   httpEnv,
-  itemCookCompany
+  operatorUrlConfig,
+  apijsonUrlEqualCommon,
+  apijsonUrlImmediateBack
 }
