@@ -8,13 +8,6 @@ const wrapInterceptors = (http) => {
     if ((req.formData || req.isFormData) && req.method === "post") {
       req.data = qs.stringify({ ...req.data })
     }
-    // post QueryStringParameters   Content-Type: application/json;charset=UTF-8
-    if ((!(req.formData || req.isFormData)) && req.method === "post" ){
-      req.url = jsonToUrlparams(req.url, req.data)
-      req.data = ""
-      req.headers["Content-Type"] = "application/json;charset=UTF-8"
-    }
-
     // 文件上传
     if (req.isfile && req.method === "post") {
       req.headers = { "Content-Type": "multipart/form-data" }
@@ -28,6 +21,9 @@ const wrapInterceptors = (http) => {
     const { host } = window.location;
     if(host.includes("localhost")){
       req.headers['sessionId'] = window.cookieStore.get("xxl_sso_sessionid")
+    }
+    if (req.method === "get" && !req.params) {
+      req.params = { ...req.data }
     }
     return req
   })
@@ -58,6 +54,7 @@ const wrapInterceptors = (http) => {
 }
 
 export default wrapInterceptors(axios.create({
+  // baseURL:'https://gray.hknet-inc.com',
   timeout: 30000,
   withCredentials: true,
 }))

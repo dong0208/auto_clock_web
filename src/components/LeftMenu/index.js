@@ -3,7 +3,8 @@ import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from "antd"
 import { connect } from 'react-redux';
 import "./index.less";
-import menuList from '../menuList';
+import {adminMenuList,normalMenuList} from '../menuList';
+
 const SubMenu = Menu.SubMenu;
 
 const defaultselectedKey = "/";
@@ -77,7 +78,7 @@ class LeftSlide extends Component {
   };
   render () {
     const { openKeys, selectedKeys } = this.state;
-    
+    const menuList = Object.create(adminMenuList)
     return (
       <div style={{overflow:'auto',height:'100vh'}}>
         <div className="log_box">

@@ -8,13 +8,14 @@ import { connect } from 'react-redux';
 import NotFound from "./pages/notFound";
 import routeConfig from "./router/config";
 import LeftMenu from "./components/LeftMenu";
-import menuList from "./components/menuList";
+import {adminMenuList,normalMenuList} from "./components/menuList";
 const routeArrayFlat = routeArray => routeArray.reduce((pre, current) => (current.child && current.child.length) ? pre.concat(routeArrayFlat(current.child)) : pre.concat(current), [])
 class App extends React.Component {
   componentWillMount() {
     // goLogin()
   }
   render() {
+    const menuList = Object.create(adminMenuList)
     return <div className="app-wrapper">
       <div className="app-main">
         <div className="left-menu">
@@ -27,7 +28,6 @@ class App extends React.Component {
               <Switch>
                 {
                   routeArrayFlat(menuList).map(({ id, route }) => {
-                    console.log(id,route,'-----------------')
                     return <Route key={id} exact path={route} component={routeConfig[route]} />
                   })
                 }

@@ -1,8 +1,7 @@
 import React from "react";
 import { Input, Button,Divider,Table,Pagination } from 'antd'
-import AddAccount from "./addAccount";
-import {getTableDataApi,getAccountEditApi} from './api'
-class AccountManage extends React.Component {
+import {getTableDataApi} from './api'
+class ClockList extends React.Component {
     state ={
         keyInput:'',
         visible:false,
@@ -45,7 +44,7 @@ class AccountManage extends React.Component {
         })
     }
     editAccountData =async (record)=>{
-        const res = await getAccountEditApi()
+        // const res = await getAccountEditApi()
         this.setState({
             visible:true,
             editData:{},
@@ -104,16 +103,7 @@ class AccountManage extends React.Component {
                     <Button onClick={this.reset}>重置</Button>
                 </div>
             </div>
-            <Divider />
-            <Button type="primary" style={{marginBottom:'20px'}} onClick={this.changeVisible}>添加账号</Button>
-            {
-                visible&&<AddAccount
-                    visible
-                    editData={editData}
-                    isEdit={isEdit}
-                    cancelVisible={this.changeVisible}
-                />
-            }
+
             <Table
                 columns={columns}
                 dataSource={tableList}
@@ -138,4 +128,4 @@ class AccountManage extends React.Component {
 }
 
 
-export default AccountManage
+export default ClockList

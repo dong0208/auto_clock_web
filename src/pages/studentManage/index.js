@@ -1,13 +1,12 @@
 import React from "react";
-import { Input, Button,Divider,Table,Pagination } from 'antd'
-import AddAccount from "./addAccount";
-import {getTableDataApi,getAccountEditApi} from './api'
-class AccountManage extends React.Component {
-    state ={
-        keyInput:'',
-        visible:false,
-        editData:{},
-        isEdit:false,
+import { Input, Button, Divider,Table,Pagination } from 'antd'
+import AddStudent from "./addStudent/index";
+import {getTableDataApi,getStudentEditApi} from './api'
+class StudentManage extends React.Component {
+    state = {
+        keyInput: '',
+        visible: false,
+        editData: {},
         tableList:[
             {
                 phone:'17616088908',
@@ -18,6 +17,7 @@ class AccountManage extends React.Component {
         tableLoading:false,
         total:0,
         currentPage:1,
+        isEdit:false
     }
     componentDidMount(){
         this.getTableData()
@@ -29,7 +29,7 @@ class AccountManage extends React.Component {
         })
 
     }
-    changeInput = ()=>{
+    changeInput = () => {
 
     }
     search = () => {
@@ -38,25 +38,26 @@ class AccountManage extends React.Component {
     reset = () => {
 
     }
-    changeVisible = ()=>{
+    changeVisible = () => {
         this.setState({
-            visible:!this.state.visible,
+            visible: !this.state.visible,
             isEdit:false
         })
+
     }
-    editAccountData =async (record)=>{
-        const res = await getAccountEditApi()
+    pageChange = ()=>{
+
+    }
+    editStudentData = async ()=>{
+        const res = await getStudentEditApi()
         this.setState({
             visible:true,
             editData:{},
             isEdit:true
         })
     }
-    pageChange = ()=>{
-
-    }
     render() {
-        const {keyInput,visible,editData,isEdit,tableList,currentPage,total,tableLoading} = this.state
+        const { keyInput, visible, editData,tableList,tableLoading,total,currentPage,isEdit } = this.state
         const columns = [
             {
                 title: '手机号',
@@ -78,7 +79,8 @@ class AccountManage extends React.Component {
                 key: 'action',
                 render: (text, record) => (
                     <>
-                        <span className="table-action" onClick={()=>{this.editAccountData(record)}} >编辑</span>
+                        <span className="table-action table-action-right" onClick={()=>{this.editStudentData(record)}} >编辑</span>
+                        <span className="table-action" >打卡</span>
                     </>
                 ),
             }
@@ -91,8 +93,8 @@ class AccountManage extends React.Component {
                         <p>手机号:</p>
                         <Input
                             placeholder="请输入手机号"
-                              onChange={this.changeInput}
-                              value={keyInput}
+                            onChange={this.changeInput}
+                            value={keyInput}
                             style={{ width: 240 }}
                         ></Input>
                     </div>
@@ -105,14 +107,13 @@ class AccountManage extends React.Component {
                 </div>
             </div>
             <Divider />
-            <Button type="primary" style={{marginBottom:'20px'}} onClick={this.changeVisible}>添加账号</Button>
+            <Button type="primary" style={{marginBottom:'20px'}} onClick={this.changeVisible}>添加学生</Button>
             {
-                visible&&<AddAccount
+                visible && <AddStudent
                     visible
                     editData={editData}
                     isEdit={isEdit}
-                    cancelVisible={this.changeVisible}
-                />
+                    cancelVisible={this.changeVisible} />
             }
             <Table
                 columns={columns}
@@ -138,4 +139,4 @@ class AccountManage extends React.Component {
 }
 
 
-export default AccountManage
+export default StudentManage

@@ -64,7 +64,6 @@ class Login extends React.Component {
           this.setState({
             submitBtnLoading: false
           })
-          console.log(res,res.sessionId)
           sessionStorage.devSet('localSession',res.sessionId)
           // window.location.replace("/home")
           history.push("/")
