@@ -21,14 +21,3 @@ export function getTableDataApi(data){
         })
     })
 }
-
-export function getAccountEditApi(data){
-    return new Promise((resolve)=>{
-        // http({
-        //     url: "/trade/area-info/geocoder",
-        //     method: "post",
-        //     data: data
-        // })
-        
-    })
-}

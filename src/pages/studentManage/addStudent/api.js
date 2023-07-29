@@ -7,3 +7,12 @@ export function submitStudentApi(data) {
             data: data
         })
 }
+
+export function editStudentApi(data) {
+    return http({
+        url: "/xue/user/updateUser",
+        method: "post",
+        data: data
+    })
+
+}

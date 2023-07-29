@@ -1,7 +1,8 @@
 import React from "react";
+import {connect} from 'react-redux'
 import { Input, Button, Divider,Table,Pagination } from 'antd'
 import AddStudent from "./addStudent/index";
-import {getTableDataApi,getStudentEditApi} from './api'
+import {getTableDataApi,stuClockApi,chanEnableApi} from './api'
 import { Switch } from "antd";
 class StudentManage extends React.Component {
     state = {
@@ -19,39 +20,67 @@ class StudentManage extends React.Component {
     }
     getTableData = async ()=>{
         const {currentPage,keyInput} = this.state
+        const {userInfo:{userId}}  = this.props
         const res = await getTableDataApi({
-            id:1000,
+            id:userId,
             pageNo:currentPage,
             phone:keyInput
         })
+        this.setState({
+            total:res.total,
+            tableList:res.table
+         })
 
     }
-    changeInput = () => {
-
+    changeInput = (e) => {
+        let value = e.target.value
+        this.setState({
+            keyInput:value
+        })
     }
     search = () => {
-
+        this.setState({
+            currentPage:1
+        },()=>{
+            this.getTableData()
+        })
     }
     reset = () => {
-
+        this.setState({
+            currentPage:1,
+            keyInput:''
+        },()=>{
+            this.getTableData()
+        })
     }
     changeVisible = () => {
         this.setState({
             visible: !this.state.visible,
             isEdit:false
+        },()=>{
+            this.getTableData()
         })
 
     }
-    pageChange = ()=>{
-
+    pageChange = (page)=>{
+        this.setState({
+            currentPage:page
+        },()=>{
+            this.getTableData()
+        })
     }
-    editStudentData = async ()=>{
-        const res = await getStudentEditApi()
+    editStudentData = async (record)=>{
         this.setState({
             visible:true,
-            editData:{},
+            editData:record,
             isEdit:true
         })
+    }
+    giveStuClock = (record)=>{
+        // stuClockApi()
+    }
+    changeEnable = (checked,recoed)=>{
+        // chanEnableApi()
     }
     render() {
         const { keyInput, visible, editData,tableList,tableLoading,total,currentPage,isEdit } = this.state
@@ -106,7 +135,8 @@ class StudentManage extends React.Component {
                 render: (text, record) => (
                     <>
                         <span className="table-action table-action-right" onClick={()=>{this.editStudentData(record)}} >编辑</span>
-                        <span className="table-action" >打卡</span>
+                        <span className="table-action table-action-right" onClick={()=>{this.giveStuClock(record)}}>打卡</span>
+                        <span className="table-action">启动/关闭<Switch defaultChecked={record.enable} onChange={(checked)=>{this.changeEnable(checked,record)}}/></span>
                     </>
                 ),
             }
@@ -164,5 +194,11 @@ class StudentManage extends React.Component {
     }
 }
 
-
-export default StudentManage
+const mapStateToProps = ({ userInfoReducer }) => {
+    return {
+      userInfo: userInfoReducer,
+    }
+}
+export default connect(
+    mapStateToProps,
+  )(StudentManage);

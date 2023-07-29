@@ -24,3 +24,8 @@ https://cdn.hknet-inc.com/live/live-operation/daily/build/index.html
 管理员账号13576995074   密码：123456
 主播账号：17606537211 密码：123456
 主播审核流程的账号 17606537111密码：yundian666666
+
+
+
+// 账号管理修改账户状态没生效
+// 学生管理 账号添加失败

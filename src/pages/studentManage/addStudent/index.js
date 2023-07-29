@@ -1,8 +1,9 @@
 import React from "react";
 import SelectMapForm from '../selectMapForm/selectMapForm'
 import '../index.less'
+import {connect} from 'react-redux'
 import { Modal, Form, Select, Button, Input,Checkbox,Radio } from 'antd'
-import {submitStudentApi} from './api'
+import {submitStudentApi,editStudentApi} from './api'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -21,18 +22,31 @@ class AddStudent extends React.Component {
     }
     handleOk = () => {
         this.props.form.validateFields((err, value) => {
-            let obj = {
-                createId:1000,
-                ...value,
-                ...value.address_mark,
-                area:value.address_mark.district,
-                clockAm:value.clockAm?1:0,
-                clockPm:value.clockPm?1:0,
-                weeks:value.weeks.length>0?value.weeks.join(','):null
+            const {userInfo:{userId},isEdit,editData} = this.props
+            if(!err){
+                let obj = {
+                    createId:userId,
+                    ...value,
+                    ...value.address_mark,
+                    area:value.address_mark.district,
+                    clockAm:value.clockAm?1:0,
+                    clockPm:value.clockPm?1:0,
+                    weeks:value.weeks.length>0?value.weeks.join(','):null
+                }
+                if(isEdit){
+                    editStudentApi({
+                        ...obj,
+                        id:editData.id
+                    }).then((res)=>{
+                        console.log(res,'edit-----------')
+                    })
+                }else {
+                    submitStudentApi(obj).then((res)=>{
+                        console.log(res,'add-------------')
+                    })
+                }
+                
             }
-            submitStudentApi(obj).then((res)=>{
-                console.log(res,'res-------------')
-            })
         });
     }
     handleCancel = () => {
@@ -148,7 +162,7 @@ class AddStudent extends React.Component {
                             // ],
                             initialValue: isEdit ? clockPm==0?false:true : null,
                         })(<Checkbox/>)}
-                        <span style={{marginLeft:'30px'}}>16:00-17:00</span>
+                        <span style={{marginLeft:'30px'}}>18:00-19:00</span>
                     </FormItem>
                     <FormItem label="详细地址:">
                         {getFieldDecorator("address", {
@@ -180,4 +194,12 @@ class AddStudent extends React.Component {
         </div>
     }
 }
-export default Form.create()(AddStudent)
+
+const mapStateToProps = ({ userInfoReducer }) => {
+    return {
+      userInfo: userInfoReducer,
+    }
+}
+export default connect(
+    mapStateToProps,
+  )(Form.create()(AddStudent));

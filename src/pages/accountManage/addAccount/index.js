@@ -1,8 +1,10 @@
 import React from "react";
-import { Modal, Form, Select,Input } from 'antd'
-import {submitAccountApi} from './api'
+import { Modal, Form, Select, Input } from 'antd'
+import { connect } from 'react-redux'
+import { submitAccountApi, editAccountApi } from './api'
 import './index.less'
 import { message } from "antd";
+import { Switch } from "antd";
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -21,14 +23,32 @@ class AddAccount extends React.Component {
     }
     handleOk = () => {
         this.props.form.validateFields(async (err, value) => {
-            const res = await submitAccountApi({
-                ...value,
-                type:1,
-                createId:1000
-            })
-            if(res.code==200){
-                message.success('添加成功')
-                this.props.cancelVisible&&this.props.cancelVisible()
+            const { userInfo: { userId }, isEdit, editData } = this.props
+            let res = {}
+            if (isEdit) {
+                const { createId, id } = editData
+                try {
+                    res = await editAccountApi({
+                        ...value,
+                        accountStatus: value.accountStatus ? 1 : 0,
+                        createId,
+                        id
+                    })
+                } catch (err) {
+                    console.log(err)
+                }
+            } else {
+                res = await submitAccountApi({
+                    ...value,
+                    type: 1,
+                    createId: userId,
+                    accountStatus: value.accountStatus ? 1 : 0
+                })
+            }
+
+            if (res.code == 200) {
+                message.success(isEdit ? '修改成功' : '添加成功')
+                this.props.cancelVisible && this.props.cancelVisible()
             }
         });
     }
@@ -37,15 +57,16 @@ class AddAccount extends React.Component {
         cancelVisible()
     }
     render() {
-        const { visible,isEdit,
-            editData:{
+        const { visible, isEdit,
+            editData: {
                 phone,
                 gongClockDays,
                 zhiClockDays,
-                password
+                password,
+                accountStatus
             } } = this.props
         const { getFieldDecorator } = this.props.form;
-        
+        console.log(this.props.editData)
         return <div>
             <Modal
                 title="添加账号"
@@ -68,7 +89,7 @@ class AddAccount extends React.Component {
                                 }
                             ],
                             initialValue: isEdit ? phone : null,
-                        })(<Input placeholder="请输入" disabled={isEdit?true:false}/>)}
+                        })(<Input placeholder="请输入" disabled={isEdit ? true : false} />)}
                     </FormItem>
                     <FormItem label="密码:">
                         {getFieldDecorator("password", {
@@ -77,6 +98,15 @@ class AddAccount extends React.Component {
                             ],
                             initialValue: isEdit ? password : null,
                         })(<Input type="password" placeholder="请输入" />)}
+                    </FormItem>
+                    <FormItem label="账号状态:">
+                        {getFieldDecorator("accountStatus", {
+                            rules: [
+                                { required: true, message: "请输入" },
+                            ],
+                            initialValue: isEdit ? accountStatus == 0 ? false : true : null,
+                            valuePropName: "checked"
+                        })(<Switch />)}
                     </FormItem>
                     <FormItem label="剩余天数(工学云):">
                         {getFieldDecorator("gongClockDays", {
@@ -108,4 +138,11 @@ class AddAccount extends React.Component {
         </div>
     }
 }
-export default Form.create()(AddAccount)
+const mapStateToProps = ({ userInfoReducer }) => {
+    return {
+        userInfo: userInfoReducer,
+    }
+}
+export default connect(
+    mapStateToProps,
+)(Form.create()(AddAccount));

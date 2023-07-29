@@ -4,6 +4,7 @@ import { message } from "antd";
 const wrapInterceptors = (http) => {
   // 请求拦截
   http.interceptors.request.use((req) => {
+    console.log(req,'req------------')
     // formData提交
     if ((req.formData || req.isFormData) && req.method === "post") {
       req.data = qs.stringify({ ...req.data })

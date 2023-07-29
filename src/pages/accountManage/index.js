@@ -1,7 +1,8 @@
 import React from "react";
 import { Input, Button,Divider,Table,Pagination } from 'antd'
+import {connect} from 'react-redux'
 import AddAccount from "./addAccount";
-import {getTableDataApi,getAccountEditApi} from './api'
+import {getTableDataApi} from './api'
 class AccountManage extends React.Component {
     state ={
         keyInput:'',
@@ -18,8 +19,9 @@ class AccountManage extends React.Component {
     }
     getTableData = async ()=>{
         const {currentPage,keyInput} = this.state
+        const {userInfo:{userId}} = this.props
         const res = await getTableDataApi({
-            id:1000,
+            id:userId,
             pageNo:currentPage,
             phone:keyInput
         })
@@ -53,6 +55,8 @@ class AccountManage extends React.Component {
         this.setState({
             visible:!this.state.visible,
             isEdit:false
+        },()=>{
+            this.getTableData()
         })
     }
     editAccountData = (record)=>{
@@ -81,6 +85,14 @@ class AccountManage extends React.Component {
                 title: '手机号',
                 key: 'phone',
                 dataIndex: 'phone',
+            },
+            {
+                title: '账号状态',
+                key: 'accountStatus',
+                dataIndex: 'accountStatus',
+                render:(text)=>{
+                    return <div>{text==0?'禁用':'正常'}</div>
+                }
             },
             {
                 title: '剩余天数(职校家园)',
@@ -155,6 +167,11 @@ class AccountManage extends React.Component {
         </div>
     }
 }
-
-
-export default AccountManage
+const mapStateToProps = ({ userInfoReducer }) => {
+    return {
+      userInfo: userInfoReducer,
+    }
+}
+export default connect(
+    mapStateToProps,
+  )(AccountManage);
