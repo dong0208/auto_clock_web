@@ -52,21 +52,22 @@ class Login extends React.Component {
           submitBtnLoading: true
         });
         http({
-          url: "/sso/app/login",
+          url: "/xue/web/login",
           method: "post",
           isFormData: true,
           data: {
             password,
             phone,
-            type: "loginCenter"
           }
         }).then((res) => {
-          this.setState({
-            submitBtnLoading: false
-          })
-          sessionStorage.devSet('localSession',res.sessionId)
-          // window.location.replace("/home")
-          history.push("/")
+          if(res.code==200){
+            this.setState({
+              submitBtnLoading: false
+            })
+            sessionStorage.devSet('localSession',res.entry.sessionId)
+            history.push("/student/manage")
+          }
+          
           
         }).catch(() => {
           this.setState({
@@ -144,28 +145,12 @@ class Login extends React.Component {
                     )}
                   </Form.Item>
                 </Form>
-                {/* <Button type="primary" loading={submitBtnLoading} onClick={this.login} className="submit-btn">登录</Button> */}
-                {/* <Checkbox checked={this.state.checked}  onChange={this.onChange}>阅读并同意</Checkbox><span style={{color:'#2663FF',marginLeft:'-6px',cursor: 'pointer'}} onClick={()=>{window.open("https://operation.hknet-inc.com/#/agreement",'target')}}>用户协议、</span><span style={{color:'#2663FF',cursor: 'pointer'}} onClick={()=>{window.open("https://operation.hknet-inc.com/#/privacyPolicy",'target')}}>隐私政策</span> */}
-          <span className="find-psd" onClick={() =>this.statusToggle("ForgetPassword")}>忘记密码?</span>
         </div>
         <div className="login_bottom">
           <Button type="primary" loading={submitBtnLoading} onClick={this.login} className="submit-btn">登录</Button>
-          {
-             this.appType !== "topbusiness" && <div className="back-btn" onClick={() => this.statusToggle("Regiter")}><span style={{color:"#909399",marginRight:'8px'}}>没有账号?</span>立即注册</div>
-          }
         </div></div>}
-
-              
-            {
-              isForgetPassword && <ForgetPassword statusToggle={this.statusToggle} />
-            }
-            {
-              isRegiter && <Register statusToggle={this.statusToggle} />
-            }
-              {/* {showUserCenter&&<UserCenter appType={this.appType} handleUserCenterSubmit={this.handleUserCenterSubmit} domainInfo={domainInfo}></UserCenter>} */}
           </div>
         </div>
-        {/* <img className="login-right"  onClick={()=>{window.open("https://www.syoo.cn",'target')}} src="https://imagesize.hknet-inc.com/sp/files/aa122e92-b1b2-491c-ae09-9f9959423d90.png" alt="" /> */}
       </div>
     )
   }

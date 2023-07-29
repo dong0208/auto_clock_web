@@ -39,22 +39,21 @@ const wrapInterceptors = (http) => {
       return Promise.reject(data)
     }
   }, (error) => {
-  
+    console.log(2)
     // 请求超时处理
     if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
       error.message = '请求超时，请稍后再试'
       message.error(error.message)
       return Promise.reject(error)
     }
-    //?error.response.data.message:
-    return Promise.resolve({status:false,message:"系统错误，请稍后再试("+error.response||''+")"})
+    return Promise.reject(error)
   })
 
   return http
 }
 
 export default wrapInterceptors(axios.create({
-  // baseURL:'https://gray.hknet-inc.com',
+  baseURL:'http://192.168.0.165:8080',
   timeout: 30000,
   withCredentials: true,
 }))

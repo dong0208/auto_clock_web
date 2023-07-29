@@ -8,13 +8,7 @@ class AccountManage extends React.Component {
         visible:false,
         editData:{},
         isEdit:false,
-        tableList:[
-            {
-                phone:'17616088908',
-                address:'浙江省杭州市余杭区',
-                remainDay:28
-            }
-        ],
+        tableList:[],
         tableLoading:false,
         total:0,
         currentPage:1,
@@ -25,18 +19,35 @@ class AccountManage extends React.Component {
     getTableData = async ()=>{
         const {currentPage,keyInput} = this.state
         const res = await getTableDataApi({
-            page:currentPage-1,
+            id:1000,
+            pageNo:currentPage,
+            phone:keyInput
         })
-
+        this.setState({
+           total:res.total,
+           tableList:res.table
+        })
     }
-    changeInput = ()=>{
-
+    changeInput = (e)=>{
+        let value = e.target.value
+        this.setState({
+            keyInput:value
+        })
     }
     search = () => {
-
+        this.setState({
+            currentPage:1
+        },()=>{
+            this.getTableData()
+        })
     }
     reset = () => {
-
+        this.setState({
+            currentPage:1,
+            keyInput:''
+        },()=>{
+            this.getTableData()
+        })
     }
     changeVisible = ()=>{
         this.setState({
@@ -44,34 +55,42 @@ class AccountManage extends React.Component {
             isEdit:false
         })
     }
-    editAccountData =async (record)=>{
-        const res = await getAccountEditApi()
+    editAccountData = (record)=>{
         this.setState({
-            visible:true,
-            editData:{},
-            isEdit:true
+            editData:record,
+            isEdit:true,
+            visible:true
         })
     }
-    pageChange = ()=>{
-
+    pageChange = (page)=>{
+        this.setState({
+            currentPage:page
+        },()=>{
+            this.getTableData()
+        })
     }
     render() {
         const {keyInput,visible,editData,isEdit,tableList,currentPage,total,tableLoading} = this.state
         const columns = [
+            {
+                title: '创建时间',
+                key: 'gmtCreate',
+                dataIndex: 'gmtCreate',
+            },
             {
                 title: '手机号',
                 key: 'phone',
                 dataIndex: 'phone',
             },
             {
-                title: '打卡地址',
-                key: 'address',
-                dataIndex: 'address',
+                title: '剩余天数(职校家园)',
+                key: 'zhiClockDays',
+                dataIndex: 'zhiClockDays',
             },
             {
-                title: '剩余天数',
-                key: 'remainDay',
-                dataIndex: 'remainDay',
+                title: '剩余天数(工学云))',
+                key: 'gongClockDays',
+                dataIndex: 'gongClockDays',
             },
             {
                 title: '操作',

@@ -2,18 +2,13 @@ import React from "react";
 import { Input, Button, Divider,Table,Pagination } from 'antd'
 import AddStudent from "./addStudent/index";
 import {getTableDataApi,getStudentEditApi} from './api'
+import { Switch } from "antd";
 class StudentManage extends React.Component {
     state = {
         keyInput: '',
         visible: false,
         editData: {},
-        tableList:[
-            {
-                phone:'17616088908',
-                address:'浙江省杭州市余杭区',
-                remainDay:28
-            }
-        ],
+        tableList:[],
         tableLoading:false,
         total:0,
         currentPage:1,
@@ -25,7 +20,9 @@ class StudentManage extends React.Component {
     getTableData = async ()=>{
         const {currentPage,keyInput} = this.state
         const res = await getTableDataApi({
-            page:currentPage-1,
+            id:1000,
+            pageNo:currentPage,
+            phone:keyInput
         })
 
     }
@@ -60,19 +57,48 @@ class StudentManage extends React.Component {
         const { keyInput, visible, editData,tableList,tableLoading,total,currentPage,isEdit } = this.state
         const columns = [
             {
+                title: '创建时间',
+                key: 'gmtCreate',
+                dataIndex: 'gmtCreate',
+            },
+            {
                 title: '手机号',
                 key: 'phone',
                 dataIndex: 'phone',
             },
             {
-                title: '打卡地址',
+                title: '密码',
+                key: 'password',
+                dataIndex: 'password',
+            },
+            {
+                title: '打卡类型',
+                key: 'appType',
+                dataIndex: 'appType',
+                render:(text)=>{
+                    return <div>{text==1?"工学云":'职校家园'}</div>
+                }
+            },
+            {
+                title: '详细地址',
                 key: 'address',
                 dataIndex: 'address',
             },
             {
-                title: '剩余天数',
-                key: 'remainDay',
-                dataIndex: 'remainDay',
+                title: '打卡时间',
+                key: 'clockTime',
+                dataIndex: 'clockTime',
+                render:(text,record)=>{
+                    return <div>
+                        {record.clockAm==1&&<span>{'8:00-9:00'}</span>}
+                        {record.clockPm==1&&<span>{'18:00-19:00'}</span>}
+                    </div>
+                }
+            },
+            {
+                title: '剩余打卡天数',
+                key: 'clockDays',
+                dataIndex: 'clockDays',
             },
             {
                 title: '操作',

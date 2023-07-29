@@ -3,7 +3,7 @@ import http from '../../../utils/http'
 export function updatePositionApi(lat,lng) {
     return new Promise((resolve)=>{
         http({
-            url: "/trade/area-info/geocoder",
+            url: "/xue/area/geocoder",
             method: "get",
             data: {
                 lat,
@@ -29,7 +29,7 @@ export function updatePositionApi(lat,lng) {
 export function handleSelectApi(data) {
     return new Promise((resolve, reject) => {
         http({
-            url: "/trade/area-info/assistant/inputtips", //"/trade/area-info/searchAddressAp",
+            url: "/xue/area/assistant/inputtips", //"/trade/area-info/searchAddressAp",
             method: "get",
             data,
             hideErrorMessage: true,
