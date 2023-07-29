@@ -21,7 +21,18 @@ class AddStudent extends React.Component {
     }
     handleOk = () => {
         this.props.form.validateFields((err, value) => {
-            console.log(value,'value-------------------')
+            let obj = {
+                createId:1000,
+                ...value,
+                ...value.address_mark,
+                area:value.address_mark.district,
+                clockAm:value.clockAm?1:0,
+                clockPm:value.clockPm?1:0,
+                weeks:value.weeks.length>0?value.weeks.join(','):null
+            }
+            submitStudentApi(obj).then((res)=>{
+                console.log(res,'res-------------')
+            })
         });
     }
     handleCancel = () => {
