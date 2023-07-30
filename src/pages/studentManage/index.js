@@ -1,9 +1,11 @@
 import React from "react";
 import {connect} from 'react-redux'
+import moment from "moment";
 import { Input, Button, Divider,Table,Pagination } from 'antd'
 import AddStudent from "./addStudent/index";
 import {getTableDataApi,stuClockApi,chanEnableApi} from './api'
 import { Switch } from "antd";
+import weekObj from './week'
 class StudentManage extends React.Component {
     state = {
         keyInput: '',
@@ -77,7 +79,7 @@ class StudentManage extends React.Component {
         })
     }
     giveStuClock = (record)=>{
-        // stuClockApi()
+        stuClockApi()
     }
     changeEnable = (checked,recoed)=>{
         // chanEnableApi()
@@ -89,16 +91,14 @@ class StudentManage extends React.Component {
                 title: '创建时间',
                 key: 'gmtCreate',
                 dataIndex: 'gmtCreate',
+                render:(text)=>{
+                    return <div>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</div>
+                }
             },
             {
                 title: '手机号',
                 key: 'phone',
                 dataIndex: 'phone',
-            },
-            {
-                title: '密码',
-                key: 'password',
-                dataIndex: 'password',
             },
             {
                 title: '打卡类型',
@@ -114,12 +114,35 @@ class StudentManage extends React.Component {
                 dataIndex: 'address',
             },
             {
+                title: '打卡日期',
+                key: 'weeks',
+                dataIndex: 'weeks',
+                render:(text)=>{
+                    if(!text)return 
+                    if(Array.isArray(JSON.parse(text))){
+                        let arr = JSON.parse(text)
+                        return <div>
+                            {arr.map((item)=>{
+                            return <span style={{marginRight:'8px'}}>周{weekObj[item]}</span>
+                        })}
+                        </div>
+                    }else{
+                        let arr = text.split(',')
+                        return <div>
+                            {arr.map((item)=>{
+                            return <span>周{weekObj[item]}</span>
+                        })}
+                        </div>
+                    }
+                }
+            },
+            {
                 title: '打卡时间',
                 key: 'clockTime',
                 dataIndex: 'clockTime',
                 render:(text,record)=>{
                     return <div>
-                        {record.clockAm==1&&<span>{'8:00-9:00'}</span>}
+                        {record.clockAm==1&&<span style={{marginRight:'20px'}}>{'8:00-9:00'}</span>}
                         {record.clockPm==1&&<span>{'18:00-19:00'}</span>}
                     </div>
                 }
@@ -177,6 +200,7 @@ class StudentManage extends React.Component {
                 rowKey={(record) => record.id}
                 pagination={false}
                 loading={tableLoading}
+                scroll={{x:2000}}
             />
 
             {tableList.length > 0 && (

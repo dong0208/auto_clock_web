@@ -1,8 +1,10 @@
 import React from "react";
+import moment from "moment";
 import { Input, Button,Divider,Table,Pagination } from 'antd'
 import {connect} from 'react-redux'
 import AddAccount from "./addAccount";
 import {getTableDataApi} from './api'
+
 class AccountManage extends React.Component {
     state ={
         keyInput:'',
@@ -80,6 +82,9 @@ class AccountManage extends React.Component {
                 title: '创建时间',
                 key: 'gmtCreate',
                 dataIndex: 'gmtCreate',
+                render:(text)=>{
+                    return <div>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</div>
+                }
             },
             {
                 title: '手机号',

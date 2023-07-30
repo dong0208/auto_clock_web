@@ -15,9 +15,7 @@ export function getTableDataApi(data) {
                 const { entry: { total, records } } = res
                 resolve({
                     total: total,
-                    table: [{
-                        gmtCreate:'12345'
-                    }]
+                    table: records
                 })
             }
         })

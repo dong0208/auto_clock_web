@@ -20,13 +20,13 @@ class Login extends React.Component {
     this.redirectUrl = urlQueryObj.redirectUrl;
     this.appType = urlQueryObj.appType; // 必传
   }
-  componentDidMount () {
-    document.title = "登录"
-    document.addEventListener("keydown", this.handleEnterKey);
-  }
-  componentWillUnmount () {
-    document.removeEventListener("keydown", this.handleEnterKey)
-  }
+  // componentDidMount () {
+  //   document.title = "登录"
+  //   document.addEventListener("keydown", this.handleEnterKey);
+  // }
+  // componentWillUnmount () {
+  //   document.removeEventListener("keydown", this.handleEnterKey)
+  // }
 
   handleEnterKey = (e) => {
     if (e.keyCode === 13) {
@@ -67,9 +67,8 @@ class Login extends React.Component {
             sessionStorage.devSet('localSession',res.entry.sessionId)
             history.push("/student/manage")
           }
-          
-          
-        }).catch(() => {
+        }).catch((err) => {
+          message.error("登陆失败，密码或账号错误！")
           this.setState({
             submitBtnLoading: false
           })

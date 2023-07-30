@@ -133,10 +133,6 @@
       "web.jsx",
       "jsx",
       "node"
-    ],
-    "watchPlugins": [
-      "/Users/liuxuanqing/lxq/黑酷/live-operation/node_modules/jest-watch-typeahead/filename.js",
-      "/Users/liuxuanqing/lxq/黑酷/live-operation/node_modules/jest-watch-typeahead/testname.js"
     ]
   },
   "babel": {
@@ -164,6 +160,6 @@
     "less": "^3.11.1",
     "less-loader": "^4.1.0",
     "react-json-view": "^1.19.1"
-  },
-  "proxy": "https://daily.hknet-inc.com"
+  }
+  
 }

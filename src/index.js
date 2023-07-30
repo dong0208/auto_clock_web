@@ -11,7 +11,7 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reduxStore from "./redux";
 import LocalLogin from "./pages/login/index"
-
+import PutPassword from './pages/PutPassword';
 let store = createStore(reduxStore, applyMiddleware(thunk));
 
 ReactDOM.render(

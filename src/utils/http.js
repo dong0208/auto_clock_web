@@ -4,7 +4,6 @@ import { message } from "antd";
 const wrapInterceptors = (http) => {
   // 请求拦截
   http.interceptors.request.use((req) => {
-    console.log(req,'req------------')
     // formData提交
     if ((req.formData || req.isFormData) && req.method === "post") {
       req.data = qs.stringify({ ...req.data })
@@ -40,13 +39,13 @@ const wrapInterceptors = (http) => {
       return Promise.reject(data)
     }
   }, (error) => {
-    console.log(2)
     // 请求超时处理
     if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
       error.message = '请求超时，请稍后再试'
       message.error(error.message)
       return Promise.reject(error)
     }
+    message.error(error.message)
     return Promise.reject(error)
   })
 

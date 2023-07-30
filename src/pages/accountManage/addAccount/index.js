@@ -97,7 +97,7 @@ class AddAccount extends React.Component {
                                 { required: true, message: "请输入" },
                             ],
                             initialValue: isEdit ? password : null,
-                        })(<Input type="password" placeholder="请输入" />)}
+                        })(<Input.Password type="password" placeholder="密码" />)}
                     </FormItem>
                     <FormItem label="账号状态:">
                         {getFieldDecorator("accountStatus", {
@@ -132,7 +132,7 @@ class AddAccount extends React.Component {
                             initialValue: isEdit ? zhiClockDays : null,
                         })(<Input placeholder="请输入" />)}
                     </FormItem>
-
+                    
                 </Form>
             </Modal>
         </div>

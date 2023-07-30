@@ -3,9 +3,9 @@ import { Dropdown, Menu, Icon } from "antd";
 import { Link } from 'react-router-dom';
 import "./index.less";
 import http from "../../utils/http";
-import { goLogin, goUserCenter } from "../../config";
+import { goLogin } from "../../config";
 import { connect } from 'react-redux';
-import { changeAction } from "../../redux/actions/changeAction";
+import history from '../../utils/history';
 
 class Header extends React.Component {
   state = {
@@ -13,19 +13,20 @@ class Header extends React.Component {
   }
   // 退出登录
   loginOut = () => {
-    // http({
-    //   url: "/sso/app/logout",
-    //   method: "post",
-    // }).then(() => {
+    http({
+      url: "/xue/web/logout",
+      method: "post",
+    }).then(() => {
       goLogin()
-    // })
+    })
+  }
+  putPassword = ()=>{
+    history.push('/put/password')
   }
 
-
   userMenu = () => <Menu>
-    {/* <Menu.Item onClick={goUserCenter}>账户设置</Menu.Item> */}
-    {/* <Menu.Item onClick={this.showShopOpenDialog}>开通门店</Menu.Item> */}
     <Menu.Item onClick={this.loginOut}>退出登录</Menu.Item>
+    <Menu.Item onClick={this.putPassword}>修改密码</Menu.Item>
   </Menu>
 
   hideShopOpenDialog = () => this.setState({ isShowOpenShopDialog: false })
