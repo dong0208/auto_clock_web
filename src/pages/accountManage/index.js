@@ -19,9 +19,13 @@ class AccountManage extends React.Component {
     componentDidMount(){
         this.getTableData()
     }
+    
     getTableData = async ()=>{
         const {currentPage,keyInput} = this.state
         const {userInfo:{userId}} = this.props
+        this.setState({
+            tableLoading:true
+        })
         const res = await getTableDataApi({
             id:userId,
             pageNo:currentPage,
@@ -29,7 +33,8 @@ class AccountManage extends React.Component {
         })
         this.setState({
            total:res.total,
-           tableList:res.table
+           tableList:res.table,
+           tableLoading:false
         })
     }
     changeInput = (e)=>{

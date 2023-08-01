@@ -20,6 +20,9 @@ class ClockList extends React.Component {
     getTableData = async ()=>{
         const {currentPage,keyInput,createPhone} = this.state
         const {userInfo:{userId}} = this.props
+        this.setState({
+            tableLoading:true
+        })
         const res = await getTableDataApi({
             id:userId,
             pageNo:currentPage,
@@ -28,7 +31,8 @@ class ClockList extends React.Component {
         })
         this.setState({
             total:res.total,
-            tableList:res.table
+            tableList:res.table,
+            tableLoading:false
          })
 
     }

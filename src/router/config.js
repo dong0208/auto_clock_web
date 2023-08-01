@@ -4,7 +4,7 @@ import StudentManage from '../pages/studentManage'
 import ClockList from '../pages/clockList'
 // 匹配菜单表路由
 const routeConfig = {
-  "/": Home,
+  "/": StudentManage,
   "/account/manage":AccountManage,
   '/student/manage':StudentManage,
   '/student/clocklist':ClockList

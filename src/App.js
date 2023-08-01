@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.less";
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch ,} from 'react-router-dom';
 import Header from "./components/Header";
 import { loginCheckApi } from "./authorityApi/login";
 import { goLogin } from "./config";
@@ -10,6 +10,7 @@ import routeConfig from "./router/config";
 import LeftMenu from "./components/LeftMenu";
 import { adminMenuList, normalMenuList } from "./components/menuList";
 import PutPassword from "./pages/PutPassword";
+import { Spin} from 'antd'
 const routeArrayFlat = routeArray => routeArray.reduce((pre, current) => (current.child && current.child.length) ? pre.concat(routeArrayFlat(current.child)) : pre.concat(current), [])
 class App extends React.Component {
   componentWillMount() {
@@ -21,6 +22,7 @@ class App extends React.Component {
           type,
           mobilePhone
         });
+        this.props.hidePageLoading()
       }
     }).catch((err) => {
       console.log(err)
@@ -28,9 +30,11 @@ class App extends React.Component {
     })
   }
   render() {
-    const {userInfo:{type}} = this.props
+    const {userInfo:{type},pageLoading} = this.props
     const menuList = Object.create(type==0?adminMenuList:normalMenuList)
+    if(pageLoading){return <div className="page-loading"><Spin/></div>}
     return <div className="app-wrapper">
+        
         <Route exact path='/put/password' component={PutPassword}></Route>
         <div className="app-main">
             <div className="left-menu">
@@ -55,15 +59,18 @@ class App extends React.Component {
     </div>
   }
 }
-const mapStateToProps = ({ userInfoReducer }) => {
+const mapStateToProps = ({ userInfoReducer,pageLoadingReducer }) => {
   return {
     userInfo: userInfoReducer,
+    pageLoading: pageLoadingReducer
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
     dispatch: dispatch,
     saveUserInfo: data => dispatch({ type: "saveUserInfo", data }),
+    hidePageLoading: data => dispatch({ type: "hidePageLoading", data }),
+    saveDomainInfo: data => dispatch({ type: "saveDomainInfo", data }),
   }
 }
 export default connect(
