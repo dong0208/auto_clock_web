@@ -77,8 +77,8 @@ class LeftSlide extends Component {
     });
   };
   render () {
-    const { openKeys, selectedKeys } = this.state;
-    const menuList = Object.create(adminMenuList)
+    const {userInfo:{type}} = this.props
+    const menuList = Object.create(type==0?adminMenuList:normalMenuList)
     return (
       <div style={{overflow:'auto',height:'100vh'}}>
         <div className="log_box">
@@ -97,4 +97,9 @@ class LeftSlide extends Component {
     );
   }
 }
-export default withRouter(LeftSlide)
+const mapStateToProps = ({ userInfoReducer }) => {
+  return {
+    userInfo: userInfoReducer,
+  }
+}
+export default connect(mapStateToProps)(withRouter(LeftSlide))

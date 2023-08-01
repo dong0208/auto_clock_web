@@ -34,7 +34,7 @@ class Header extends React.Component {
 
   render () {
     const { isShowOpenShopDialog } = this.state;
-    const { userInfo: { userName, mobilePhone, avatarUrl },  } = this.props;
+    const { userInfo: { userId ,mobilePhone},  } = this.props;
     return (
       <div className="app-header">
         <div className='header-menu'></div>
@@ -42,8 +42,8 @@ class Header extends React.Component {
         <div className="user-info">
           <Dropdown overlay={this.userMenu()}>
             <div style={{display: 'flex', cursor: "pointer"}}>
-              <img className="user-avater" alt="" src={avatarUrl || "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"} />
-              <div className="user-name">{userName || mobilePhone||'hello'}</div>
+              <img className="user-avater" alt="" src={"https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"} />
+              <div className="user-name">{mobilePhone}</div>
             </div>
           </Dropdown>
         </div>

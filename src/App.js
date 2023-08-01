@@ -27,7 +27,8 @@ class App extends React.Component {
     // })
   }
   render() {
-    const menuList = Object.create(adminMenuList)
+    const {userInfo:{type}} = this.props
+    const menuList = Object.create(type==0?adminMenuList:normalMenuList)
     return <div className="app-wrapper">
         <Route exact path='/put/password' component={PutPassword}></Route>
         <div className="app-main">
