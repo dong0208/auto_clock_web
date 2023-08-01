@@ -27,6 +27,7 @@ export function stuClockApi(data){
         url: "/xue/user/handleClock",
         method: "post",
         data,
+        isFormData:true
     })
 }
 export function chanEnableApi(data){
@@ -34,5 +35,6 @@ export function chanEnableApi(data){
         url: "/xue/user/activateUserClock",
         method: "post",
         data,
+        isFormData:true
     })
 }

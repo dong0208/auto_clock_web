@@ -69,14 +69,14 @@ class AddStudent extends React.Component {
         history.push('https://www.pushplus.plus/','_black')
     }
     render() {
-        const { visible ,isEdit} = this.props
+        const { visible ,isEdit,userInfo:{type}} = this.props
         const { getFieldDecorator,getFieldValue } = this.props.form;
+        console.log(this.props,'-----this.props.editData')
         const {
             longitude,
             latitude,
             province, 
             city,
-            district,
             mapAddress,
             phone,
             password,
@@ -86,7 +86,9 @@ class AddStudent extends React.Component {
             clockAm,
             clockPm,
             address,
-            pushKey
+            pushKey,
+            area,
+            primaryAccount
         } = this.props.editData
     
         const optionsWeeks = [
@@ -128,7 +130,7 @@ class AddStudent extends React.Component {
                                 { required: true, message: "请输入" },
                             ],
                             initialValue: isEdit ? password : null,
-                        })(<Input.Password placeholder="请输入" />)}
+                        })(<Input.Password placeholder="请输入" disabled={type==0?primaryAccount==0?true:false:false}/>)}
                     </FormItem>
                     <FormItem label="打卡类型:">
                         {getFieldDecorator("appType", {
@@ -136,7 +138,7 @@ class AddStudent extends React.Component {
                                 { required: true, message: "请输入" },
                             ],
                             initialValue: isEdit ? appType : null,
-                        })(<Radio.Group >
+                        })(<Radio.Group disabled={type==0?primaryAccount==0?true:false:false}>
                             <Radio value={1}>工学云</Radio>
                             <Radio value={2}>职校家园</Radio>
                           </Radio.Group>)}
@@ -147,7 +149,7 @@ class AddStudent extends React.Component {
                                 { required: false, message: "请输入" },
                             ],
                             initialValue: isEdit ? pushKey : null,
-                        })(<Input placeholder="请输入" />)}
+                        })(<Input placeholder="请输入" disabled={type==0?primaryAccount==0?true:false:false}/>)}
                         <a href='https://www.pushplus.plus/' target="_blank">https://www.pushplus.plus/</a>
                     </FormItem>
                     <FormItem label="剩余天数:">
@@ -160,7 +162,7 @@ class AddStudent extends React.Component {
                                 }
                             ],
                             initialValue: isEdit ? clockDays : null,
-                        })(<Input placeholder="请输入" />)}
+                        })(<Input placeholder="请输入" disabled={type==0?primaryAccount==0?true:false:false}/>)}
                     </FormItem>
                     <FormItem label="打卡日期:">
                         {getFieldDecorator("weeks", {
@@ -168,7 +170,8 @@ class AddStudent extends React.Component {
                             //     { required: true, message: "请输入" },
                             // ],
                             initialValue: isEdit ? weeks?JSON.parse(weeks):[] : [],
-                        })(<Checkbox.Group
+                        })(<Checkbox.Group 
+                            disabled={type==0?primaryAccount==0?true:false:false}
                             options={optionsWeeks}
                           />)}
                     </FormItem>
@@ -188,7 +191,7 @@ class AddStudent extends React.Component {
                             ],
                             valuePropName: "checked",
                             initialValue: isEdit ? clockAm==0?false:true : false,
-                        })(<Checkbox/>)}
+                        })(<Checkbox disabled={type==0?primaryAccount==0?true:false:false}/>)}
                         <span style={{marginLeft:'30px'}}>8:00-9:00</span>
                     </FormItem>
                     <FormItem label="打卡下午:">
@@ -206,7 +209,7 @@ class AddStudent extends React.Component {
                             ],
                             initialValue: isEdit ? clockPm==0?false:true : false,
                             valuePropName: "checked"
-                        })(<Checkbox/>)}
+                        })(<Checkbox disabled={type==0?primaryAccount==0?true:false:false}/>)}
                         <span style={{marginLeft:'30px'}}>18:00-19:00</span>
                     </FormItem>
                     <FormItem label="详细地址:">
@@ -215,9 +218,9 @@ class AddStudent extends React.Component {
                                 { required: true, message: "请输入" },
                             ],
                             initialValue: isEdit ? address : null,
-                        })(<Input placeholder="请输入" />)}
+                        })(<Input placeholder="请输入" disabled={type==0?primaryAccount==0?true:false:false}/>)}
                     </FormItem>
-                    <FormItem label="地址标记:">
+                    {(!(type==0&&primaryAccount==0))&&<FormItem label="地址标记:">
                         {getFieldDecorator("address_mark", {
                             rules: [{ required: true, message: "请输入" }],
                             initialValue: isEdit
@@ -226,12 +229,12 @@ class AddStudent extends React.Component {
                                     latitude,
                                     province,
                                     city,
-                                    district,
+                                    district:area,
                                     mapAddress,
                                 }
                                 : { longitude: null, latitude: null },
                         })(<SelectMapForm />)}
-                    </FormItem>
+                    </FormItem>}
                     
                 </Form>
 

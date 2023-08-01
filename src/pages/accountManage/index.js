@@ -110,6 +110,16 @@ class AccountManage extends React.Component {
                 dataIndex: 'gongClockDays',
             },
             {
+                title: '已打卡天数(职校家园)',
+                key: 'alreadyGongClockDays',
+                dataIndex: 'alreadyGongClockDays',
+            },
+            {
+                title: '已打卡天数(工学云)',
+                key: 'alreadyZhiClockDays',
+                dataIndex: 'alreadyZhiClockDays',
+            },
+            {
                 title: '操作',
                 key: 'action',
                 render: (text, record) => (

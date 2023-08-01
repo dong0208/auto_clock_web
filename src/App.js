@@ -21,7 +21,6 @@ class App extends React.Component {
     //       type
     //     });
     //   }
-
     // }).catch((err) => {
     //   console.log(err)
     //   goLogin()

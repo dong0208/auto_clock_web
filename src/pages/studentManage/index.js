@@ -6,6 +6,7 @@ import AddStudent from "./addStudent/index";
 import {getTableDataApi,stuClockApi,chanEnableApi} from './api'
 import { Switch } from "antd";
 import weekObj from './week'
+import { message } from "antd";
 class StudentManage extends React.Component {
     state = {
         keyInput: '',
@@ -15,18 +16,22 @@ class StudentManage extends React.Component {
         tableLoading:false,
         total:0,
         currentPage:1,
-        isEdit:false
+        isEdit:false,
+        bool:true,
+        recordChecked:false,
+        createPhone:''
     }
     componentDidMount(){
         this.getTableData()
     }
     getTableData = async ()=>{
-        const {currentPage,keyInput} = this.state
+        const {currentPage,keyInput,createPhone} = this.state
         const {userInfo:{userId}}  = this.props
         const res = await getTableDataApi({
             id:userId,
             pageNo:currentPage,
-            phone:keyInput
+            phone:keyInput,
+            createPhone
         })
         this.setState({
             total:res.total,
@@ -40,6 +45,12 @@ class StudentManage extends React.Component {
             keyInput:value
         })
     }
+    changereatePhone = (e)=>{
+        let value = e.target.value
+        this.setState({
+            createPhone:value
+        })
+    }
     search = () => {
         this.setState({
             currentPage:1
@@ -50,7 +61,8 @@ class StudentManage extends React.Component {
     reset = () => {
         this.setState({
             currentPage:1,
-            keyInput:''
+            keyInput:'',
+            createPhone:''
         },()=>{
             this.getTableData()
         })
@@ -79,14 +91,33 @@ class StudentManage extends React.Component {
         })
     }
     giveStuClock = (record)=>{
-        stuClockApi()
+        const {userInfo:{userId}} = this.props
+        stuClockApi({
+            createId:userId,
+            id:record.id
+        }).then((res)=>{
+            if(res.code==200){
+                this.getTableData()
+                message.success(res.entry)
+            }
+        })
     }
-    changeEnable = (checked,recoed)=>{
-        // chanEnableApi()
+    changeEnable = (checked,record)=>{
+        chanEnableApi({
+            id:record.id,
+            enable:checked
+        }).then((res)=>{
+            if(res.code==200){
+                this.getTableData()
+                message.success(checked?'启动成功':'关闭成功')
+            }
+        })
     }
+    
     render() {
-        const { keyInput, visible, editData,tableList,tableLoading,total,currentPage,isEdit } = this.state
-        const columns = [
+        const { keyInput, visible, editData,tableList,tableLoading,total,currentPage,isEdit,createPhone } = this.state
+        const {userInfo:{type}} = this.props
+        let columns = [
             {
                 title: '创建时间',
                 key: 'gmtCreate',
@@ -122,15 +153,15 @@ class StudentManage extends React.Component {
                     if(Array.isArray(JSON.parse(text))){
                         let arr = JSON.parse(text)
                         return <div>
-                            {arr.map((item)=>{
-                            return <span style={{marginRight:'8px'}}>周{weekObj[item]}</span>
+                            {arr.map((item,index)=>{
+                            return <span key={index} style={{marginRight:'8px'}}>周{weekObj[item]}</span>
                         })}
                         </div>
                     }else{
                         let arr = text.split(',')
                         return <div>
-                            {arr.map((item)=>{
-                            return <span>周{weekObj[item]}</span>
+                            {arr.map((item,index)=>{
+                            return <span key={index}>周{weekObj[item]}</span>
                         })}
                         </div>
                     }
@@ -155,16 +186,25 @@ class StudentManage extends React.Component {
             {
                 title: '操作',
                 key: 'action',
-                render: (text, record) => (
-                    <>
-                        <span className="table-action table-action-right" onClick={()=>{this.editStudentData(record)}} >编辑</span>
+                fixed:'right',
+                render: (text, record) => {
+                   const {userInfo:{type}} = this.props
+                   return <>
+                        <span className="table-action table-action-right" onClick={()=>{this.editStudentData(record)}} >{type==0?record.primaryAccount==0?'查看':'编辑':'编辑'}</span>
                         <span className="table-action table-action-right" onClick={()=>{this.giveStuClock(record)}}>打卡</span>
-                        <span className="table-action">启动/关闭<Switch defaultChecked={record.enable} onChange={(checked)=>{this.changeEnable(checked,record)}}/></span>
+                        <span className="table-action">启动/关闭<Switch  checked={record.enable} onChange={(checked)=>{this.changeEnable(checked,record)}}/></span>
                     </>
-                ),
+                },
             }
             
         ]
+        if(type==0){
+            columns.splice(1,0,{
+                title: '创建人手机号',
+                key: 'createPhone',
+                dataIndex: 'createPhone',
+            },)
+        }
         return <div className='content-main'>
             <div className="search-info">
                 <div className="search-body">
@@ -177,6 +217,15 @@ class StudentManage extends React.Component {
                             style={{ width: 240 }}
                         ></Input>
                     </div>
+                    {type==0&&<div className="search-item">
+                        <p>创建人手机号:</p>
+                        <Input
+                            placeholder="请输入手机号"
+                            onChange={this.changereatePhone}
+                            value={createPhone}
+                            style={{ width: 240 }}
+                        ></Input>
+                    </div>}
                 </div>
                 <div className="search-btn">
                     <Button type="primary" onClick={this.search} className="primary">

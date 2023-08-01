@@ -53,7 +53,7 @@ const wrapInterceptors = (http) => {
 }
 
 export default wrapInterceptors(axios.create({
-  baseURL:'http://192.168.0.165:8080',
+  baseURL:'http://ydong.w1.luyouxia.net',
   timeout: 30000,
   withCredentials: true,
 }))
