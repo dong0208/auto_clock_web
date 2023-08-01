@@ -30,7 +30,7 @@ class AddAccount extends React.Component {
                 try {
                     res = await editAccountApi({
                         ...value,
-                        accountStatus: value.accountStatus ? 1 : 0,
+                        accountStatus: value.accountStatus ? 0 : 1,
                         createId,
                         id
                     })
@@ -42,7 +42,7 @@ class AddAccount extends React.Component {
                     ...value,
                     type: 1,
                     createId: userId,
-                    accountStatus: value.accountStatus ? 1 : 0
+                    accountStatus: value.accountStatus ? 0 : 1
                 })
             }
 
@@ -104,7 +104,7 @@ class AddAccount extends React.Component {
                             rules: [
                                 { required: true, message: "请输入" },
                             ],
-                            initialValue: isEdit ? accountStatus == 0 ? false : true : null,
+                            initialValue: isEdit ? accountStatus == 0 ? true : false : null,
                             valuePropName: "checked"
                         })(<Switch />)}
                     </FormItem>

@@ -96,7 +96,7 @@ class AccountManage extends React.Component {
                 key: 'accountStatus',
                 dataIndex: 'accountStatus',
                 render:(text)=>{
-                    return <div>{text==0?'禁用':'正常'}</div>
+                    return <div>{text==0?'正常':'禁用'}</div>
                 }
             },
             {
