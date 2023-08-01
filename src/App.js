@@ -13,18 +13,19 @@ import PutPassword from "./pages/PutPassword";
 const routeArrayFlat = routeArray => routeArray.reduce((pre, current) => (current.child && current.child.length) ? pre.concat(routeArrayFlat(current.child)) : pre.concat(current), [])
 class App extends React.Component {
   componentWillMount() {
-    // loginCheckApi().then((res) => {
-    //   if (res.code == 200) {
-    //     const { entry: { userId, type } } = res
-    //     this.props.saveUserInfo({
-    //       userId,
-    //       type
-    //     });
-    //   }
-    // }).catch((err) => {
-    //   console.log(err)
-    //   goLogin()
-    // })
+    loginCheckApi().then((res) => {
+      if (res.code == 200) {
+        const { entry: { userId, type,mobilePhone } } = res
+        this.props.saveUserInfo({
+          userId,
+          type,
+          mobilePhone
+        });
+      }
+    }).catch((err) => {
+      console.log(err)
+      goLogin()
+    })
   }
   render() {
     const {userInfo:{type}} = this.props
